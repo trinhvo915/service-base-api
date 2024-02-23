@@ -6,111 +6,192 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <!--
-        JHipster core tables.
-        The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
-    -->
-    <changeSet id="00000000000001" author="jhipster">
-        <createTable tableName="jhi_user">
-            <column name="id" type="bigint" autoIncrement="true" startWith="1050">
+    <changeSet id="00000000000001" author="Trinh Vo">
+        <createTable tableName="user">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="login" type="varchar(50)">
-                <constraints unique="true" nullable="false" uniqueConstraintName="ux_user_login"/>
+            <column name="username" type="varchar(50)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_user_username"/>
             </column>
-            <column name="password_hash" type="varchar(60)"/>
-            <column name="first_name" type="varchar(50)"/>
-            <column name="last_name" type="varchar(50)"/>
-            <column name="email" type="varchar(191)">
+            <column name="email" type="varchar(254)">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_email"/>
             </column>
-            <column name="image_url" type="varchar(256)"/>
+            <column name="mobile" type="varchar(50)"/>
+            <column name="password" type="varchar(60)"/>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
+            <column name="title" type="varchar(255)"/>
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
-            <column name="lang_key" type="varchar(10)"/>
-            <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
+            <column name="reset_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="url_avatar" type="longtext"/>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" type="timestamp"/>
-            <column name="reset_date" type="timestamp">
-                <constraints nullable="true"/>
-            </column>
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
+            <column defaultValueBoolean="false" name="is_delete" type="boolean">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
-        <createTable tableName="jhi_authority">
-            <column name="name" type="varchar(50)">
+        <createTable tableName="role">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-        </createTable>
-
-        <createTable tableName="jhi_user_authority">
-            <column name="user_id" type="bigint">
+            <column name="name" type="varchar(50)">
+            </column>
+            <column name="display" type="varchar(255)">
+            </column>
+            <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="authority_name" type="varchar(50)">
+            <column name="created_date" type="timestamp"/>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column defaultValueBoolean="false" name="is_delete" type="boolean">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+        <createTable tableName="user_role">
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="authority_name"
-                                 baseTableName="jhi_user_authority"
-                                 constraintName="fk_authority_name"
-                                 referencedColumnNames="name"
-                                 referencedTableName="jhi_authority"/>
+        <addPrimaryKey columnNames="user_id, role_id" tableName="user_role"/>
+
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="user_role"
+                                 constraintName="fk_user_role_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="role"/>
 
         <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="jhi_user_authority"
-                                 constraintName="fk_user_id"
+                                 baseTableName="user_role"
+                                 constraintName="fk_user_role_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
+                                 referencedTableName="user"/>
 
-        <addNotNullConstraint   columnName="password_hash"
+        <addNotNullConstraint   columnName="password"
                                 columnDataType="varchar(60)"
-                                tableName="jhi_user"/>
-        <loadData
-                file="config/liquibase/data/authority.csv"
-                separator=";"
-                tableName="jhi_authority"
-                usePreparedStatements="true">
-            <column name="name" type="string"/>
-        </loadData>
-        <loadData
-                file="config/liquibase/data/user.csv"
-                separator=";"
-                tableName="jhi_user"
-                usePreparedStatements="true">
-            <column name="activated" type="boolean"/>
+                                tableName="user"/>
+
+        <createTable tableName="permission">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+            </column>
+            <column name="display" type="varchar(255)">
+            </column>
+            <column name="action" type="varchar(255)">
+            </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_date" type="timestamp"/>
-        </loadData>
-        <loadData
-                file="config/liquibase/data/user_authority.csv"
-                separator=";"
-                tableName="jhi_user_authority"
-                usePreparedStatements="true">
-            <column name="user_id" type="numeric"/>
-        </loadData>
-        <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="${datetimeType}"/>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column defaultValueBoolean="false" name="is_delete" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="role_permission">
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="role_id, permission_id" tableName="role_permission"/>
+
+        <addForeignKeyConstraint baseColumnNames="role_id"
+                                 baseTableName="role_permission"
+                                 constraintName="fk_role_permission_role_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="role"/>
+
+        <addForeignKeyConstraint baseColumnNames="permission_id"
+                                 baseTableName="role_permission"
+                                 constraintName="fk_role_permission_permission_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="permission"/>
+
+        <!--        <loadData-->
+        <!--                file="liquibase/data/user.csv"-->
+        <!--                separator=";"-->
+        <!--                tableName="jhi_authority"-->
+        <!--                usePreparedStatements="true">-->
+        <!--            <column name="name" type="string"/>-->
+        <!--        </loadData>-->
+    </changeSet>
+    <changeSet id="00000000000002" author="Trinh Vo">
+        <sql>
+            INSERT INTO role(id, name, display, created_by, created_date, last_modified_by, last_modified_date, is_delete)
+            WITH raw_data AS (
+                SELECT '945b757f-d21e-11ee-bbdc-0242ac140002' AS id,	'ADMIN' AS name,		'admin' AS display,	      'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '99b3261e-d21e-11ee-bbdc-0242ac140002' AS id,	'USER' AS name,			'user' AS display,	      'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '9f847ebe-d21e-11ee-bbdc-0242ac140002' AS id,	'ANONYMOUS' AS name,	'anonymous' AS display,	  'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete
+            )
+            SELECT * FROM raw_data
+        </sql>
+    </changeSet>
+    <changeSet id="00000000000003" author="Trinh Vo">
+        <sql>
+            INSERT INTO permission(id, name, display, action, created_by, created_date, last_modified_by, last_modified_date, is_delete)
+            WITH raw_data AS (
+                SELECT '3ac20bfb-1660-11ee-9559-0242ac160002' AS id,	'USER.CREATE' AS name,			'USER' AS display,		    'CREATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '459fc8cc-1660-11ee-9559-0242ac160002' AS id,	'USER.DELETE' AS name,			'USER' AS display,		    'DELETE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '4a01a7bb-1660-11ee-9559-0242ac160002' AS id,	'USER.READ' AS name,			'USER' AS display,		    'READ' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '4d8ca622-1660-11ee-9559-0242ac160002' AS id,	'USER.UPDATE' AS name,			'USER' AS display,		    'UPDATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '5191ccf0-1660-11ee-9559-0242ac160002' AS id,	'ROLE.CREATE' AS name,			'ROLE' AS display,		    'CREATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '550e6665-1660-11ee-9559-0242ac160002' AS id,	'ROLE.DELETE' AS name,			'ROLE' AS display,		    'DELETE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '591982e6-1660-11ee-9559-0242ac160002' AS id,	'ROLE.READ' AS name,			'ROLE' AS display,		    'READ' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '5c9fd745-1660-11ee-9559-0242ac160002' AS id,	'ROLE.UPDATE' AS name,			'ROLE' AS display,		    'UPDATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '612e006d-1660-11ee-9559-0242ac160002' AS id,	'PERMISSION.CREATE' AS name,	'PERMISSION' AS display,	'CREATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '65f02810-1660-11ee-9559-0242ac160002' AS id,	'PERMISSION.DELETE' AS name,	'PERMISSION' AS display,	'DELETE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '698ba9e3-1660-11ee-9559-0242ac160002' AS id,	'PERMISSION.READ' AS name,	    'PERMISSION' AS display,	'READ' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete UNION ALL
+                SELECT '6d238009-1660-11ee-9559-0242ac160002' AS id,	'PERMISSION.UPDATE' AS name,	'PERMISSION' AS display,	'UPDATE' AS action,	'system' AS created_by,	NOW() AS created_date,	'system' AS last_modified_by,	NOW() AS last_modified_date, false AS is_delete
+            )
+            SELECT * FROM raw_data
+        </sql>
     </changeSet>
 
-    <changeSet author="jhipster" id="00000000000002" context="test">
-        <createTable tableName="jhi_date_time_wrapper">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="jhi_date_time_wrapperPK"/>
-            </column>
-            <column name="instant" type="timestamp"/>
-            <column name="local_date_time" type="timestamp"/>
-            <column name="offset_date_time" type="timestamp"/>
-            <column name="zoned_date_time" type="timestamp"/>
-            <column name="local_time" type="time"/>
-            <column name="offset_time" type="time"/>
-            <column name="local_date" type="date"/>
-        </createTable>
+    <changeSet id="00000000000004" author="Trinh Vo">
+        <sql>
+            INSERT INTO role_permission(role_id, permission_id)
+            WITH raw_data AS (
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '3ac20bfb-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '459fc8cc-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '4a01a7bb-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '4d8ca622-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '5191ccf0-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '550e6665-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '591982e6-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '5c9fd745-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '612e006d-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '65f02810-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '698ba9e3-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '945b757f-d21e-11ee-bbdc-0242ac140002' AS role_id, '6d238009-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '99b3261e-d21e-11ee-bbdc-0242ac140002' AS role_id, '3ac20bfb-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '99b3261e-d21e-11ee-bbdc-0242ac140002' AS role_id, '4a01a7bb-1660-11ee-9559-0242ac160002'  AS permission_id UNION ALL
+                SELECT    '99b3261e-d21e-11ee-bbdc-0242ac140002' AS role_id, '4d8ca622-1660-11ee-9559-0242ac160002'  AS permission_id
+            )
+            SELECT * FROM raw_data
+        </sql>
     </changeSet>
 </databaseChangeLog>

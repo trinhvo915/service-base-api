@@ -1,6 +1,5 @@
 package com.service.api.config;
 
-
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 import javax.crypto.SecretKey;
@@ -21,7 +20,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @Configuration
 public class SecurityJwtConfiguration {
 
-    @Value("${key.security.jwt.base64-secret}")
+    @Value("${security.key.jwt.base64-secret}")
     private String jwtSecretKey;
 
     @Bean

@@ -37,6 +37,11 @@ public class Role extends AbstractAuditingEntity<UUID> implements Serializable {
     @Column(length = 50, unique = true, nullable = false)
     private String name;
 
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "display", length = 255, nullable = false)
+    private String display;
+
     @Builder.Default
     @ManyToMany
     @JoinTable(

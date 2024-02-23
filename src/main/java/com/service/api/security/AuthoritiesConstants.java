@@ -8,6 +8,8 @@ public final class AuthoritiesConstants {
 
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
 
+    public static final String ROLE_PREFIX = "ROLE_";
+
     private AuthoritiesConstants() {}
 }
 

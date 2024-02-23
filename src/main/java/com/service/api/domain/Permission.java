@@ -24,6 +24,7 @@ import java.util.UUID;
 @SQLDelete(sql = "UPDATE permission SET is_delete = TRUE WHERE id=?")
 @Table(name = "permission")
 public class Permission  extends AbstractAuditingEntity<UUID> implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

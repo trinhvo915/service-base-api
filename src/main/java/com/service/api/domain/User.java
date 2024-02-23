@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -36,13 +37,19 @@ public class User extends AbstractAuditingEntity<UUID> implements Serializable {
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @NotNull(message = "Login is required")
+    @NotNull(message = "Username is required")
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
-    @Column(name = "login", length = 50, unique = true, nullable = false)
-    private String login;
+    @Column(name = "username", length = 50, unique = true, nullable = false)
+    private String username;
 
-    @Column(name = "mobile")
+    @Email
+    @Size(min = 5, max = 254)
+    @Column(name = "email", length = 254, unique = true, nullable = false)
+    private String email;
+
+    @Size(min = 1, max = 50)
+    @Column(name = "mobile", unique = true, length = 50)
     private String mobile;
 
     @JsonIgnore
@@ -63,15 +70,19 @@ public class User extends AbstractAuditingEntity<UUID> implements Serializable {
     @Column(name = "title", length = 255)
     private String title;
 
-    @Email
-    @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true, nullable = false)
-    private String email;
-
     @Builder.Default
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "activated", nullable = false)
     private boolean activated = false;
+
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
+    @JsonIgnore
+    private String resetKey;
+
+    @Builder.Default
+    @Column(name = "reset_date")
+    private Instant resetDate = null;
 
     @Column(name = "url_avatar", columnDefinition = "LONGTEXT")
     private String urlAvatar;
