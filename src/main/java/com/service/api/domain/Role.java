@@ -26,10 +26,9 @@ public class Role extends AbstractAuditingEntity<UUID> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "char(36)")
-    @JdbcTypeCode(SqlTypes.UUID)
+    @GeneratedValue
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "id", length = 36)
     private UUID id;
 
     @NotNull(message = "Role name is required")

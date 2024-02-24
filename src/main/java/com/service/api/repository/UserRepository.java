@@ -9,9 +9,11 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findByUsernameAndActivatedTrueAndIsDeleteTrue(String username);
+    Optional<User> findByUsernameAndActivatedTrueAndIsDeleteFalse(String username);
 
-    Optional<User> findByEmailAndActivatedTrueAndIsDeleteTrue(String email);
+    Optional<User> findByEmailAndActivatedTrueAndIsDeleteFalse(String email);
 
-    Optional<User> findByMobileAndActivatedTrueAndIsDeleteTrue(String mobile);
+    Optional<User> findByMobileAndActivatedTrueAndIsDeleteFalse(String mobile);
+
+    Optional<User> findByIdAndActivatedTrueAndIsDeleteFalse(UUID id);
 }

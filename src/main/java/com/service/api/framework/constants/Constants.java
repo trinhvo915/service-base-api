@@ -10,4 +10,6 @@ public final class Constants {
     public static final String DEFAULT_LANGUAGE = "en";
     public static final String WIN = "win";
     public static final String MAC = "mac";
+
+    public static final String BEARER_TOKEN = "Bearer";
 }

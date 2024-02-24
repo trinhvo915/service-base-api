@@ -1,11 +1,9 @@
 package com.service.api.domain;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 
 import javax.validation.constraints.NotNull;
@@ -28,10 +26,9 @@ public class Permission  extends AbstractAuditingEntity<UUID> implements Seriali
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "char(36)")
-    @JdbcTypeCode(SqlTypes.UUID)
+    @GeneratedValue
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "id", length = 36)
     private UUID id;
 
     @NotNull

@@ -43,8 +43,6 @@ public class UserPrincipal implements UserDetails, Serializable {
                 .map(role -> new SimpleGrantedAuthority(AuthoritiesConstants.ROLE_PREFIX +role.getName()))
                 .collect(Collectors.toSet());
 
-        //TODO:
-        /*
         user.getRoles().forEach(role -> {
             if(CollectionUtils.isNotEmpty(role.getPermissions())){
                 role.getPermissions().forEach(p -> {
@@ -52,7 +50,6 @@ public class UserPrincipal implements UserDetails, Serializable {
                 });
             }
         });
-        */
 
         return UserPrincipal.builder()
                 .id(user.getId())

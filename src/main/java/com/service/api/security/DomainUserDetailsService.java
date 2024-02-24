@@ -33,16 +33,16 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     private Optional<User> getUserLogin(String login){
-        Optional<User> usernameUser = userRepository.findByUsernameAndActivatedTrueAndIsDeleteTrue(login);
+        Optional<User> usernameUser = userRepository.findByUsernameAndActivatedTrueAndIsDeleteFalse(login);
         if(usernameUser.isPresent()){
             return usernameUser;
         }
 
-        Optional<User> emailUser = userRepository.findByEmailAndActivatedTrueAndIsDeleteTrue(login);
+        Optional<User> emailUser = userRepository.findByEmailAndActivatedTrueAndIsDeleteFalse(login);
         if(emailUser.isPresent()){
             return emailUser;
         }
 
-        return userRepository.findByMobileAndActivatedTrueAndIsDeleteTrue(login);
+        return userRepository.findByMobileAndActivatedTrueAndIsDeleteFalse(login);
     }
 }
