@@ -37,23 +37,22 @@ public class User extends AbstractAuditingEntity<UUID> implements Serializable {
     private UUID id;
 
     @NotNull(message = "Username is required")
-    @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
     @Column(name = "username", length = 50, unique = true, nullable = false)
     private String username;
 
     @Email
     @Size(min = 5, max = 254)
-    @Column(name = "email", length = 254, unique = true, nullable = false)
+    @Column(name = "email", length = 254)
     private String email;
 
-    @Size(min = 1, max = 50)
-    @Column(name = "mobile", unique = true, length = 50)
+    @Size(min = 8, max = 50)
+    @Column(name = "mobile", length = 50)
     private String mobile;
 
     @JsonIgnore
     @NotNull(message = "Password is required")
-    @Size(min = 60, max = 60)
+    @Size(min = 6, max = 30)
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 

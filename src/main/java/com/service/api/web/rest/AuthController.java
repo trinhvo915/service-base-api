@@ -5,6 +5,8 @@ import com.service.api.framework.constants.MessageConstants;
 import com.service.api.framework.handler.model.ResponseData;
 import com.service.api.framework.support.ResponseSupport;
 import com.service.api.model.request.user.LoginResDTO;
+import com.service.api.model.request.user.signup.SignUpEmailDTO;
+import com.service.api.model.request.user.signup.SignUpMobileDTO;
 import com.service.api.model.response.user.UserLoginResDTO;
 import com.service.api.model.response.user.UserProfileResDTO;
 import com.service.api.security.JwtTokenProvider;
@@ -65,5 +67,31 @@ public class AuthController {
                 .httpStatus(HttpStatus.OK.value())
                 .message(MessageConstants.LOGOUT_SUCCESS)
                 .data(result).build());
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<ResponseData> signUpEmail(
+            @Valid @RequestBody SignUpEmailDTO signUpRes
+    ) {
+        userService.signUpEmail(signUpRes);
+
+        return responseSupport.success(ResponseData.builder()
+                .isSuccess(true)
+                .httpStatus(HttpStatus.CREATED.value())
+                .message(MessageConstants.REGISTER_USER_SUCCESS)
+                .build());
+    }
+
+    @PostMapping("/sign-up/mobile")
+    public ResponseEntity<ResponseData> signUpMobile(
+            @Valid @RequestBody SignUpMobileDTO signUpRes
+    ) {
+        userService.signUpMobile(signUpRes);
+
+        return responseSupport.success(ResponseData.builder()
+                .isSuccess(true)
+                .httpStatus(HttpStatus.CREATED.value())
+                .message(MessageConstants.REGISTER_USER_SUCCESS)
+                .build());
     }
 }

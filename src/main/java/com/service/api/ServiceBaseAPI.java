@@ -2,6 +2,7 @@ package com.service.api;
 
 import com.service.api.domain.Role;
 import com.service.api.domain.User;
+import com.service.api.framework.constants.RoleConstant;
 import com.service.api.repository.RoleRepository;
 import com.service.api.repository.UserRepository;
 import org.apache.commons.collections4.CollectionUtils;
@@ -39,7 +40,7 @@ public class ServiceBaseAPI implements CommandLineRunner {
 		List<User> users = userRepository.findAll();
 
 		if(CollectionUtils.isEmpty(users)){
-			List<String> roleParams = List.of("ADMIN", "USER");
+			List<String> roleParams = List.of(RoleConstant.ADMIN, RoleConstant.USER);
 			Set<Role> roles = roleRepository.findByNameIn(roleParams);
 
 			User user = User.builder()
