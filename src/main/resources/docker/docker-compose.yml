@@ -1,0 +1,36 @@
+version: '3.3'
+services:
+  zookeeper:
+    extends:
+      file: ./kafka.yml
+      service: zookeeper
+  kafka1:
+    extends:
+      file: ./kafka.yml
+      service: kafka1
+  kafka2:
+    extends:
+      file: ./kafka.yml
+      service: kafka2
+  kafka3:
+    extends:
+      file: ./kafka.yml
+      service: kafka3
+  kafka-manager:
+    extends:
+      file: ./kafka.yml
+      service: kafka-manager
+  rabbitmq:
+    extends:
+      file: ./rabbitmq.yml
+      service: rabbitmq
+
+
+
+
+
+
+
+
+
+
