@@ -2,19 +2,20 @@ package com.service.api.service.user;
 
 import com.service.api.domain.Role;
 import com.service.api.domain.User;
+import com.service.api.framework.constants.EmailConstants;
 import com.service.api.framework.constants.RoleConstant;
 import com.service.api.framework.exception.NotFoundException;
+import com.service.api.framework.utils.ThreadUtil;
 import com.service.api.model.request.user.signup.SignUpEmailDTO;
 import com.service.api.model.request.user.signup.SignUpMobileDTO;
 import com.service.api.model.response.user.UserProfileResDTO;
 import com.service.api.repository.UserRepository;
+import com.service.api.service.email.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -23,10 +24,13 @@ public class UserService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder){
+    private final MailService mailService;
+
+    public UserService(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, MailService mailService){
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     public UserProfileResDTO getUserProfile(UUID userId){
@@ -59,6 +63,25 @@ public class UserService {
                 .roles(roles)
                 .build();
 
-        return userRepository.save(user);
+        User userSave = userRepository.save(user);
+
+        //TODO: Send email sign up user
+        //ThreadUtil.runAsync(() -> sendEmailSignUpUser(userSave));
+
+        return userSave;
+    }
+
+    private void sendEmailSignUpUser(User user){
+        String subject = "Sign Up User";
+        Map<String, Object> emailContent = new HashMap<>();
+
+        emailContent.put(EmailConstants.EMAIL, user.getEmail());
+        emailContent.put(EmailConstants.FULLNAME, user.getUsername());
+
+        mailService.sendEmail(new String[]{user.getEmail()}
+                , new String[0]
+                , subject
+                , EmailConstants.SIGN_UP_USER_TEMPLATE_MAIL
+                , emailContent);
     }
 }
