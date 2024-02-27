@@ -4,9 +4,9 @@ import com.service.api.framework.constants.Constants;
 import com.service.api.framework.constants.MessageConstants;
 import com.service.api.framework.handler.model.ResponseData;
 import com.service.api.framework.support.ResponseSupport;
-import com.service.api.model.request.user.LoginResDTO;
-import com.service.api.model.request.user.signup.SignUpEmailDTO;
-import com.service.api.model.request.user.signup.SignUpMobileDTO;
+import com.service.api.model.request.user.LoginReqDTO;
+import com.service.api.model.request.user.signup.SignUpEmailReqDTO;
+import com.service.api.model.request.user.signup.SignUpMobileReqDTO;
 import com.service.api.model.response.user.UserLoginResDTO;
 import com.service.api.model.response.user.UserProfileResDTO;
 import com.service.api.security.JwtTokenProvider;
@@ -43,7 +43,7 @@ public class AuthController {
     }
     @PostMapping("/sign-in")
     public ResponseEntity<ResponseData> signIn(
-            @Valid @RequestBody LoginResDTO loginRes
+            @Valid @RequestBody LoginReqDTO loginRes
     ) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginRes.getUsername(),
@@ -65,13 +65,13 @@ public class AuthController {
         return responseSupport.success(ResponseData.builder()
                 .isSuccess(true)
                 .httpStatus(HttpStatus.OK.value())
-                .message(MessageConstants.LOGOUT_SUCCESS)
+                .message(MessageConstants.LOGIN_SUCCESS)
                 .data(result).build());
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<ResponseData> signUpEmail(
-            @Valid @RequestBody SignUpEmailDTO signUpRes
+            @Valid @RequestBody SignUpEmailReqDTO signUpRes
     ) {
         userService.signUpEmail(signUpRes);
 
@@ -84,7 +84,7 @@ public class AuthController {
 
     @PostMapping("/sign-up/mobile")
     public ResponseEntity<ResponseData> signUpMobile(
-            @Valid @RequestBody SignUpMobileDTO signUpRes
+            @Valid @RequestBody SignUpMobileReqDTO signUpRes
     ) {
         userService.signUpMobile(signUpRes);
 

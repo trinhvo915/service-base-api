@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(mvc.pattern("/api/activate")).permitAll()
                                 .requestMatchers(mvc.pattern("/api/account/reset-password/init")).permitAll()
                                 .requestMatchers(mvc.pattern("/api/account/reset-password/finish")).permitAll()
-                                .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                                .requestMatchers(mvc.pattern("/api/user/**")).hasAuthority(AuthoritiesConstants.ADMIN)
                                 .requestMatchers(mvc.pattern("/api/**")).authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

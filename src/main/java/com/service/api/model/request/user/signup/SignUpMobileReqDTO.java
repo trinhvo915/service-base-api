@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpMobileDTO extends SignUpDTO {
+public class SignUpMobileReqDTO extends SignUpReqDTO {
 
     @NotNull(message = "Mobile is required")
     @Size(min = 8, max = 50)

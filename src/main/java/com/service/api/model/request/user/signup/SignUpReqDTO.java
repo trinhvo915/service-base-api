@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,10 +14,12 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpEmailDTO extends SignUpDTO {
+public class SignUpReqDTO {
+    @NotNull(message = "Username is required")
+    @Size(min = 1, max = 50)
+    private String username;
 
-    @Email
-    @Size(min = 5, max = 254)
-    @NotNull(message = "Email is required")
-    private String email;
+    @NotNull(message = "Password is required")
+    @Size(min = 6, max = 30)
+    private String password;
 }
